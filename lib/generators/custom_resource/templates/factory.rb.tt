@@ -1,0 +1,12 @@
+FactoryBot.define do
+  factory :<%= resource_name %>, class: '<%= class_name %>' do
+    label { Faker::Commerce.unique.product_name }
+    association :creator, factory: :user
+
+    trait :discarded_<%= resource_name %> do
+      discarded_at { 1.hour.ago }
+    end
+
+    to_create { |instance| instance.save(validate: false) }
+  end
+end

@@ -1,0 +1,50 @@
+version: 2
+updates:
+  - package-ecosystem: bundler
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: "Europe/Moscow"
+    open-pull-requests-limit: 10
+    # Группировка связанных зависимостей
+    groups:
+      # Rails компоненты
+      rails:
+        patterns:
+          - "rails*"
+          - "action*"
+          - "active*"
+      # Тестовые зависимости
+      test-dependencies:
+        patterns:
+          - "rspec*"
+          - "capybara"
+          - "factory_bot*"
+          - "faker"
+          - "selenium-webdriver"
+          - "webdrivers"
+          - "email_spec"
+          - "test-prof"
+      # Линтеры
+      linters:
+        patterns:
+          - "rubocop*"
+      # Основные зависимости engine
+      core-dependencies:
+        patterns:
+          - "devise"
+          - "pundit"
+          - "ransack"
+          - "pagy"
+          - "discard"
+          - "morph"
+          - "colorize"
+    # Сначала Dependabot попытается выполнить rebase. Если rebase не сработает (например, из-за конфликтов), он
+    # автоматически переключится на использование merge.
+    rebase-strategy: auto
+    # Игнорировать мажорные обновления Rails
+    ignore:
+      - dependency-name: "rails"
+        update-types: ["version-update:semver-major"]

@@ -1,0 +1,1 @@
+<%%= render 'form', back_path: <%= route_path %>_path %>

@@ -1,0 +1,30 @@
+<% if @main_title.present? || @breadcrumbs.present? %>
+  <div class="app-content-header">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-6">
+          <% if @main_title.present? %>
+            <h3><%= @main_title || '' %></h3>
+          <% end %>
+        </div>
+        <div class="col-sm-6">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb float-sm-end">
+              <li class="breadcrumb-item"><%= ts_link_to('Главная', root_path) %></li>
+
+              <% @breadcrumbs&.each do |item| %>
+                <% if @breadcrumbs.last == item %>
+                  <li class="breadcrumb-item active" aria-current="page"><%= item[:title] %></li>
+                <% elsif item[:path].blank? %>
+                  <li class="breadcrumb-item"><%= item[:title] %></li>
+                <% else %>
+                  <li class="breadcrumb-item"><%= ts_link_to(item[:title], item[:path]) %></li>
+                <% end %>
+              <% end %>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

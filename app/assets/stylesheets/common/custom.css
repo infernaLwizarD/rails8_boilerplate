@@ -1,0 +1,91 @@
+.card a {
+  text-decoration: none !important;
+}
+
+/* Минимальная ширина для поля поиска */
+.card-header input[type="search"],
+.card-header input[type="text"] {
+  min-width: 80px;
+}
+
+/* Минимальная ширина для select элементов */
+.card-header select {
+  min-width: 60px;
+}
+
+/* Предотвращение переноса текста в кнопках и заголовках таблиц */
+.btn, .table th {
+  white-space: nowrap;
+}
+
+.w-60 {
+  width: 60px !important;
+}
+.w-100px {
+  width: 100px !important;
+}
+.w-200 {
+  width: 200px !important;
+}
+.w-300 {
+  width: 300px !important;
+}
+.w-400 {
+  width: 400px !important;
+}
+.w-500 {
+  width: 500px !important;
+}
+.w-600 {
+  width: 600px !important;
+}
+.w-700 {
+  width: 700px !important;
+}
+.w-800 {
+  width: 800px !important;
+}
+.w-900 {
+  width: 900px !important;
+}
+.w-1000 {
+  width: 1000px !important;
+}
+
+.mw-100px {
+  max-width: 100px !important;
+}
+.mw-200 {
+  max-width: 200px !important;
+}
+.mw-300 {
+  max-width: 300px !important;
+}
+.mw-400 {
+  max-width: 400px !important;
+}
+.mw-500 {
+  max-width: 500px !important;
+}
+.mw-600 {
+  max-width: 600px !important;
+}
+.mw-700 {
+  max-width: 700px !important;
+}
+.mw-800 {
+  max-width: 800px !important;
+}
+.mw-900 {
+  max-width: 900px !important;
+}
+.mw-1000 {
+  max-width: 1000px !important;
+}
+
+.resize-h {
+  resize: horizontal;
+}
+.resize-b {
+  resize: both;
+}
