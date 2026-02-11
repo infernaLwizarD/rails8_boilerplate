@@ -126,7 +126,7 @@ rails generate custom_resource References::Brand 'Бренд'
 
 ## Зависимости
 
-- Rails ~> 8.1.0
+- Rails ~> 8.1.2
 - Devise ~> 4.9
 - Discard ~> 1.4 (soft delete)
 - Morph ~> 0.3 (склонение слов)
