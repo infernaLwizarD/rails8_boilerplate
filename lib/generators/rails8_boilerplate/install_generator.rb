@@ -13,6 +13,7 @@ module Rails8Boilerplate
       class_option :no_kamal, type: :boolean, default: false, desc: 'Пропустить установку Kamal конфигурации'
       class_option :no_docker, type: :boolean, default: false, desc: 'Пропустить установку Docker конфигурации'
       class_option :main_branch, type: :string, default: 'main', desc: 'Главная ветка проекта (main/master)'
+      class_option :force, type: :boolean, default: false, desc: 'Перезаписать существующие файлы без запроса подтверждения'
 
       def copy_migrations
         # Копируем миграцию Devise для создания таблицы users
@@ -24,9 +25,9 @@ module Rails8Boilerplate
       def copy_initializers
         say "Копирование initializers...", :green
         template 'lib/generators/rails8_boilerplate/templates/initializers/devise.rb',
-                 'config/initializers/devise.rb'
+                 'config/initializers/devise.rb', force: options[:force]
         template 'lib/generators/rails8_boilerplate/templates/initializers/pagy.rb',
-                 'config/initializers/pagy.rb'
+                 'config/initializers/pagy.rb', force: options[:force]
 
         say "\n⚠️ Настройте initializers под ваше приложение при необходимости:", :yellow
         say "  - config/initializers/devise.rb"
@@ -35,58 +36,58 @@ module Rails8Boilerplate
 
       def copy_models
         say "Копирование моделей...", :green
-        directory 'lib/generators/rails8_boilerplate/templates/models', 'app/models'
+        directory 'lib/generators/rails8_boilerplate/templates/models', 'app/models', force: options[:force]
       end
 
       def copy_repositories
         say "Копирование репозиториев...", :green
-        directory 'lib/generators/rails8_boilerplate/templates/repositories', 'app/repositories'
+        directory 'lib/generators/rails8_boilerplate/templates/repositories', 'app/repositories', force: options[:force]
       end
 
       def copy_controllers
         say "Копирование контроллеров...", :green
-        directory 'lib/generators/rails8_boilerplate/templates/controllers/web', 'app/controllers/web'
+        directory 'lib/generators/rails8_boilerplate/templates/controllers/web', 'app/controllers/web', force: options[:force]
       end
 
       def copy_policies
         say "Копирование политик...", :green
-        directory 'lib/generators/rails8_boilerplate/templates/policies', 'app/policies'
+        directory 'lib/generators/rails8_boilerplate/templates/policies', 'app/policies', force: options[:force]
       end
 
       def copy_views
         say "Копирование вью...", :green
-        directory 'lib/generators/rails8_boilerplate/templates/views/web', 'app/views/web'
+        directory 'lib/generators/rails8_boilerplate/templates/views/web', 'app/views/web', force: options[:force]
         # Layouts остаются в engine (AdminLTE шаблоны)
       end
 
       def copy_specs
         say "Копирование тестов...", :green
-        directory 'lib/generators/rails8_boilerplate/templates/spec', 'spec'
+        directory 'lib/generators/rails8_boilerplate/templates/spec', 'spec', force: options[:force]
       end
 
       def copy_locales
         say "Копирование локализаций...", :green
-        directory 'config/locales', 'config/locales'
+        directory 'config/locales', 'config/locales', force: options[:force]
       end
 
       def copy_seeds
         say "Копирование seeds...", :green
-        copy_file 'db/seeds.rb', 'db/seeds.rb'
+        copy_file 'db/seeds.rb', 'db/seeds.rb', force: options[:force]
       end
 
       def copy_rubocop_config
         say "Копирование RuboCop конфигурации...", :green
 
-        if File.exist?('.rubocop.yml')
-          # Если файл существует, копируем как .sample
+        if File.exist?('.rubocop.yml') && !options[:force]
+          # Если файл существует и не установлен force, копируем как .sample
           copy_file 'lib/generators/rails8_boilerplate/templates/rubocop.yml', '.rubocop.yml.sample'
           say "  ✓ .rubocop.yml.sample (оригинал уже существует)", :yellow
           
           say "\n⚠️ .rubocop.yml уже существует:", :yellow
           say "  - Проверьте .rubocop.yml.sample и при необходимости объедините правила\n"
         else
-          # Если файла нет, копируем как есть
-          copy_file 'lib/generators/rails8_boilerplate/templates/rubocop.yml', '.rubocop.yml'
+          # Если файла нет или установлен force, копируем как есть
+          copy_file 'lib/generators/rails8_boilerplate/templates/rubocop.yml', '.rubocop.yml', force: options[:force]
           say "  ✓ .rubocop.yml", :green
           
           say "\n⚠️  RuboCop конфигурация скопирована", :yellow
@@ -107,13 +108,13 @@ module Rails8Boilerplate
           file = File.basename(source_path)
           source_file = "lib/generators/rails8_boilerplate/templates/docker/#{file}"
           
-          if File.exist?(file)
-            # Если файл существует, копируем как .sample
+          if File.exist?(file) && !options[:force]
+            # Если файл существует и не установлен force, копируем как .sample
             copy_file source_file, "#{file}.sample"
             say "  ✓ #{file}.sample (оригинал уже существует)", :yellow
           else
-            # Если файла нет, копируем как есть
-            copy_file source_file, file
+            # Если файла нет или установлен force, копируем как есть
+            copy_file source_file, file, force: options[:force]
             say "  ✓ #{file}", :green
           end
         end
@@ -125,18 +126,18 @@ module Rails8Boilerplate
       def copy_env_sample
         say "Создание .env файла...", :green
 
-        if File.exist?('.env')
-          # Если .env уже существует, создаем только .env.sample
-          template 'lib/generators/rails8_boilerplate/templates/env.sample', '.env.sample'
+        if File.exist?('.env') && !options[:force]
+          # Если .env уже существует и не установлен force, создаем только .env.sample
+          template 'lib/generators/rails8_boilerplate/templates/env.sample', '.env.sample', force: options[:force]
           say "  ✓ .env.sample создан (файл .env уже существует)", :yellow
           
           say "\n⚠️ .env файл уже существует:", :yellow
           say "  - Проверьте .env.sample и при необходимости обновите ваш .env"
           say "  - Убедитесь, что все необходимые переменные присутствуют\n"
         else
-          # Если .env не существует, создаем и .env и .env.sample
-          template 'lib/generators/rails8_boilerplate/templates/env.sample', '.env'
-          template 'lib/generators/rails8_boilerplate/templates/env.sample', '.env.sample'
+          # Если .env не существует или установлен force, создаем и .env и .env.sample
+          template 'lib/generators/rails8_boilerplate/templates/env.sample', '.env', force: options[:force]
+          template 'lib/generators/rails8_boilerplate/templates/env.sample', '.env.sample', force: options[:force]
           say "  ✓ .env создан", :green
           say "  ✓ .env.sample создан", :green
           
@@ -160,7 +161,7 @@ module Rails8Boilerplate
         end
 
         # Копируем наш кастомный secrets
-        copy_file 'lib/generators/rails8_boilerplate/templates/kamal/secrets', '.kamal/secrets'
+        copy_file 'lib/generators/rails8_boilerplate/templates/kamal/secrets', '.kamal/secrets', force: options[:force]
 
         # Переименовываем сгенерированный deploy.yml в sample
         if File.exist?('config/deploy.yml')
@@ -168,7 +169,7 @@ module Rails8Boilerplate
         end
 
         # Копируем наш кастомный deploy.yml
-        template 'lib/generators/rails8_boilerplate/templates/kamal/deploy.yml', 'config/deploy.yml'
+        template 'lib/generators/rails8_boilerplate/templates/kamal/deploy.yml', 'config/deploy.yml', force: options[:force]
 
         say "\n⚠️ Настройте Kamal конфигурацию:", :yellow
         say "  - .kamal/secrets"
@@ -184,20 +185,20 @@ module Rails8Boilerplate
         # Создаем директорию .github/workflows если её нет
         empty_directory '.github/workflows' unless File.exist?('.github/workflows')
 
-        # Переименовываем существующий ci.yml в sample если он есть
-        if File.exist?('.github/workflows/ci.yml')
+        # Переименовываем существующий ci.yml в sample если он есть и не установлен force
+        if File.exist?('.github/workflows/ci.yml') && !options[:force]
           run 'mv .github/workflows/ci.yml .github/workflows/ci.yml.sample'
         end
 
         # Копируем наш кастомный ci.yml
         template 'lib/generators/rails8_boilerplate/templates/github/workflows/ci.yml', 
-                 '.github/workflows/ci.yml'
+                 '.github/workflows/ci.yml', force: options[:force]
 
         # Копируем deploy workflows как disabled
         template 'lib/generators/rails8_boilerplate/templates/github/workflows/deploy.ghcr.yml.disabled',
-                 '.github/workflows/deploy.ghcr.yml.disabled'
+                 '.github/workflows/deploy.ghcr.yml.disabled', force: options[:force]
         template 'lib/generators/rails8_boilerplate/templates/github/workflows/deploy.dockerhub.yml.disabled',
-                 '.github/workflows/deploy.dockerhub.yml.disabled'
+                 '.github/workflows/deploy.dockerhub.yml.disabled', force: options[:force]
 
         say "\n⚠️ Настройте GitHub Actions:", :yellow
         say "  - Главная ветка установлена: #{@main_branch}"
@@ -210,7 +211,7 @@ module Rails8Boilerplate
 
         # Копируем .env.production.sample с подстановкой значений
         template 'lib/generators/rails8_boilerplate/templates/env.production.sample',
-                 '.env.production.sample'
+                 '.env.production.sample', force: options[:force]
 
         say "\n⚠️ Настройте .env.production.sample:", :yellow
         say "  - Проверьте сгенерированные значения RAILS_MASTER_KEY и DB_PASSWORD"
