@@ -218,6 +218,34 @@ module Rails8Boilerplate
         say "  - Скопируйте .env.production.sample в .env на production сервер\n"
       end
 
+      def setup_javascript
+        say "Настройка JavaScript импортов...", :green
+
+        # Engine автоматически добавляет свои importmap pins через initializer.
+        # Здесь добавляем импорты engine-библиотек в application.js хост-приложения.
+        js_file = 'app/javascript/application.js'
+
+        unless File.exist?(js_file)
+          say "  ⚠️ #{js_file} не найден, пропускаем", :yellow
+          return
+        end
+
+        imports = <<~JS
+
+          // Rails8Boilerplate
+          import "bootstrap"
+          import "adminlte"
+          import "fontawesome"
+          import "fontawesome_solid"
+        JS
+
+        content = File.read(js_file)
+        unless content.include?('import "bootstrap"')
+          append_to_file js_file, imports
+          say "  ✓ Добавлены импорты bootstrap, adminlte, fontawesome", :green
+        end
+      end
+
       def configure_application
         say "Настройка config/application.rb...", :green
 
@@ -238,6 +266,10 @@ module Rails8Boilerplate
   scope module: :web do
     authenticated :user do
       root to: 'home#index', as: :authenticated_root
+
+      post 'change_frame1_color', to: 'home#change_frame1_color'
+      post 'change_frame2_color', to: 'home#change_frame2_color'
+      post 'reset_colors', to: 'home#reset_colors'
 
       resources :users do
         member do
