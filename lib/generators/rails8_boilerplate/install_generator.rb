@@ -60,6 +60,27 @@ module Rails8Boilerplate
         # Layouts остаются в engine (AdminLTE шаблоны)
       end
 
+      def remove_default_layout
+        say "Удаление стандартного layout хост-приложения...", :green
+        # Стандартный layouts/application.html.erb перекрывает layout engine,
+        # в котором подключены header, footer, sidebar и CSS
+        layout_file = 'app/views/layouts/application.html.erb'
+        if File.exist?(layout_file)
+          remove_file layout_file
+          say "  ✓ #{layout_file} удалён (используется layout из engine)", :green
+        end
+      end
+
+      def configure_application_controller
+        say "Настройка ApplicationController...", :green
+
+        inject_into_class 'app/controllers/application_controller.rb',
+                          'ApplicationController',
+                          "  include Pundit::Authorization\n  include Pagy::Backend\n\n"
+
+        say "  ✓ Добавлены Pundit::Authorization и Pagy::Backend", :green
+      end
+
       def copy_specs
         say "Копирование тестов...", :green
         directory 'lib/generators/rails8_boilerplate/templates/spec', 'spec', force: options[:force]
@@ -310,6 +331,7 @@ module Rails8Boilerplate
         say "  • Контроллеры:  app/controllers/web/*"
         say "  • Policies:     app/policies/*"
         say "  • Views:        app/views/web/*"
+        say "  • Layout:       удалён стандартный (используется из engine)"
         say "  • Specs:        spec/*"
         say "  • Initializers: config/initializers/devise.rb, pagy.rb"
         say "  • Локализации:  config/locales/*"
