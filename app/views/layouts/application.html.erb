@@ -17,6 +17,11 @@
 
   <%# Includes all stylesheet files in app/assets/stylesheets %>
   <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "common/plugins/bootstrap.min", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "common/plugins/fontawesome/fontawesome.min", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "common/plugins/fontawesome/solid.min", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "common/plugins/adminlte.min", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "common/custom", "data-turbo-track": "reload" %>
   <%= javascript_importmap_tags %>
 
   <% if content_for?(:head) %>
