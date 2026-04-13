@@ -1,88 +1,183 @@
-# Структура Rails8Boilerplate Engine
 
-## 📁 Финальная структура
-
-### В Engine (не копируется)
+## 📁 Структура Rails8Boilerplate Engine
 
 ```
 rails8_boilerplate/
 ├── app/
-│   ├── assets/                    # ✅ AdminLTE стили и изображения
-│   │   ├── images/
+│   ├── assets/                    # AdminLTE стили и изображения
 │   │   └── stylesheets/
-│   ├── helpers/                   # ✅ Универсальные helpers
+│   │       ├── application.css
+│   │       └── common/
+│   │           ├── custom.css
+│   │           └── plugins/       # AdminLTE, Bootstrap, FontAwesome
+│   ├── helpers/                   # Универсальные helpers
 │   │   ├── application_helper.rb
 │   │   ├── buttons_helper.rb
 │   │   ├── common_helper.rb
 │   │   ├── font_awesome_helper.rb
 │   │   ├── pagy_helper.rb
 │   │   └── ransack_helper.rb
-│   ├── javascript/                # ✅ AdminLTE JS
+│   ├── javascript/                # AdminLTE JS
 │   │   ├── application.js
 │   │   ├── common/
+│   │   │   └── plugins/           # AdminLTE, Bootstrap, Popper, FontAwesome
 │   │   └── controllers/
+│   │       ├── application.js
+│   │       ├── autohide_controller.js
+│   │       ├── hello_controller.js
+│   │       ├── index.js
+│   │       └── navigation_controller.js
 │   └── views/
-│       └── layouts/               # ✅ AdminLTE шаблоны
-│           └── lte/
-│               ├── application.html.erb
-│               ├── auth.html.erb
-│               └── partials/
-│                   ├── _header.html.erb
-│                   ├── _sidebar.html.erb
-│                   ├── _footer.html.erb
-│                   ├── _flash.html.erb
-│                   └── _breadcrumbs.html.erb
+│       ├── layouts/               # AdminLTE шаблоны
+│       │   ├── application.html.erb
+│       │   ├── logon.html.erb
+│       │   ├── mailer.html.erb
+│       │   ├── mailer.text.erb
+│       │   └── lte/
+│       │       ├── _content.erb
+│       │       ├── _footer.erb
+│       │       ├── _header.erb
+│       │       ├── _sidebar.erb
+│       │       ├── _sidebar_menu.html.erb
+│       │       └── partials/
+│       │           ├── _breadcrumbs.erb
+│       │           └── _flash.erb
+│       └── pwa/
+│           ├── manifest.json.erb
+│           └── service-worker.js
 ├── config/
-│   └── locales/                   # ✅ Переводы (копируются)
-│       ├── ru.yml
-│       └── pagy.ru.yml
+│   ├── importmap.rb               # JS-зависимости engine
+│   └── locales/                   # Переводы (копируются)
+│       ├── devise.en.yml
+│       ├── devise.ru.yml
+│       ├── en.yml
+│       ├── pagy.ru.yml
+│       └── ru.yml
 ├── db/
-│   └── migrate/
-│       └── devise_create_users.rb # ✅ Шаблон миграции
+│   ├── migrate/
+│   │   └── devise_create_users.rb # Шаблон миграции
+│   └── seeds.rb                   # Начальные данные
 └── lib/
+    ├── core_ext/
+    │   └── cputs.rb               # Цветной вывод в консоль
     ├── generators/
-    │   ├── custom_resource/       # ✅ Генератор CRUD
+    │   ├── custom_resource/       # Генератор CRUD
     │   │   ├── custom_resource_generator.rb
+    │   │   ├── README.md
+    │   │   ├── USAGE
     │   │   └── templates/
+    │   │       ├── controller.rb.tt
+    │   │       ├── factory.rb.tt
+    │   │       ├── migration.rb.tt
+    │   │       ├── model.rb.tt
+    │   │       ├── policy.rb.tt
+    │   │       ├── ransack.rb.tt
+    │   │       └── repository.rb.tt
     │   └── rails8_boilerplate/
     │       ├── install_generator.rb
-    │       └── templates/         # 📦 Шаблоны для копирования
+    │       └── templates/         # Шаблоны для копирования
     │           ├── controllers/
     │           │   └── web/
     │           │       ├── application_controller.rb
     │           │       ├── home_controller.rb
     │           │       ├── users_controller.rb
     │           │       └── users/
-    │           │           ├── sessions_controller.rb
-    │           │           ├── registrations_controller.rb
-    │           │           ├── passwords_controller.rb
     │           │           ├── confirmations_controller.rb
+    │           │           ├── omniauth_callbacks_controller.rb
+    │           │           ├── passwords_controller.rb
+    │           │           ├── registrations_controller.rb
+    │           │           ├── sessions_controller.rb
     │           │           └── unlocks_controller.rb
+    │           ├── docker/
+    │           │   ├── Dockerfile.development
+    │           │   ├── Dockerfile.production
+    │           │   ├── docker-compose.yml
+    │           │   ├── docker-compose.development.yml
+    │           │   └── docker-compose.production.yml
+    │           ├── env.sample
+    │           ├── env.production.sample
+    │           ├── github/
+    │           │   └── workflows/
+    │           │       ├── ci.yml
+    │           │       ├── deploy.dockerhub.yml.disabled
+    │           │       └── deploy.ghcr.yml.disabled
     │           ├── initializers/
     │           │   ├── devise.rb
     │           │   └── pagy.rb
+    │           ├── kamal/
+    │           │   ├── deploy.yml
+    │           │   └── secrets
     │           ├── models/
-    │           │   ├── user.rb
     │           │   ├── application_record.rb
+    │           │   ├── cable_record.rb
+    │           │   ├── cache_record.rb
+    │           │   ├── queue_record.rb
+    │           │   ├── user.rb
     │           │   └── concerns/
-    │           │       ├── user_repository.rb
     │           │       ├── user_ransack.rb
     │           │       └── user_role_enum.rb
     │           ├── policies/
     │           │   ├── application_policy.rb
     │           │   └── user_policy.rb
+    │           ├── repositories/
+    │           │   └── user_repository.rb
+    │           ├── rubocop.yml
     │           ├── spec/
     │           │   ├── factories/
+    │           │   │   └── users.rb
     │           │   ├── features/
-    │           │   ├── models/
-    │           │   ├── policies/
+    │           │   │   ├── devise/
+    │           │   │   │   ├── confirmation_resend_spec.rb
+    │           │   │   │   ├── lockable_spec.rb
+    │           │   │   │   ├── password_recovery_spec.rb
+    │           │   │   │   ├── registration_spec.rb
+    │           │   │   │   └── sign_in_spec.rb
+    │           │   │   └── users/
+    │           │   │       ├── create_spec.rb
+    │           │   │       ├── delete_spec.rb
+    │           │   │       ├── lock_spec.rb
+    │           │   │       └── update_spec.rb
     │           │   ├── rails_helper.rb
     │           │   ├── spec_helper.rb
     │           │   └── support/
+    │           │       ├── capybara.rb
+    │           │       ├── feature_helpers.rb
+    │           │       └── mail_helpers.rb
     │           └── views/
     │               └── web/
     │                   ├── home/
+    │                   │   ├── index.html.erb
+    │                   │   ├── _frame1.html.erb
+    │                   │   └── _frame2.html.erb
     │                   └── users/
+    │                       ├── index.html.erb
+    │                       ├── show.html.erb
+    │                       ├── new.html.erb
+    │                       ├── edit.html.erb
+    │                       ├── _form.html.erb
+    │                       ├── confirmations/
+    │                       │   └── new.html.erb
+    │                       ├── mailer/
+    │                       │   ├── confirmation_instructions.html.erb
+    │                       │   ├── email_changed.html.erb
+    │                       │   ├── password_change.html.erb
+    │                       │   ├── reset_password_instructions.html.erb
+    │                       │   └── unlock_instructions.html.erb
+    │                       ├── partials/
+    │                       │   └── _search_form.html.erb
+    │                       ├── passwords/
+    │                       │   ├── edit.html.erb
+    │                       │   └── new.html.erb
+    │                       ├── registrations/
+    │                       │   ├── edit.html.erb
+    │                       │   └── new.html.erb
+    │                       ├── sessions/
+    │                       │   └── new.html.erb
+    │                       ├── shared/
+    │                       │   ├── _error_messages.html.erb
+    │                       │   └── _links.html.erb
+    │                       └── unlocks/
+    │                           └── new.html.erb
     ├── rails8_boilerplate/
     │   ├── engine.rb
     │   └── version.rb
@@ -103,64 +198,106 @@ rails generate rails8_boilerplate:install
 
 ```
 my_awesome_app/
+├── .env                               # Переменные окружения
+├── .env.sample                        # Пример .env
+├── .env.production.sample             # Пример для production
+├── .github/
+│   └── workflows/
+│       ├── ci.yml                     # CI pipeline
+│       ├── deploy.dockerhub.yml.disabled
+│       └── deploy.ghcr.yml.disabled
+├── .kamal/
+│   ├── secrets                        # Kamal secrets
+│   └── secrets.sample
+├── .rubocop.yml                       # RuboCop конфигурация
+├── Dockerfile.development             # Docker (dev)
+├── Dockerfile.production              # Docker (prod)
+├── docker-compose.yml
+├── docker-compose.development.yml
+├── docker-compose.production.yml
 ├── app/
 │   ├── models/
-│   │   ├── user.rb                    # ✅ Скопировано из templates
+│   │   ├── application_record.rb      # Скопировано
+│   │   ├── cable_record.rb            # Скопировано
+│   │   ├── cache_record.rb            # Скопировано
+│   │   ├── queue_record.rb            # Скопировано
+│   │   ├── user.rb                    # Скопировано
 │   │   └── concerns/
-│   │       ├── user_repository.rb     # ✅ Скопировано
-│   │       ├── user_ransack.rb        # ✅ Скопировано
-│   │       └── user_role_enum.rb      # ✅ Скопировано
+│   │       ├── user_ransack.rb        # Скопировано
+│   │       └── user_role_enum.rb      # Скопировано
+│   ├── repositories/
+│   │   └── user_repository.rb         # Скопировано
 │   ├── controllers/
-│   │   └── web/                       # ✅ Скопировано из templates
+│   │   └── web/                       # Скопировано
 │   │       ├── application_controller.rb
 │   │       ├── home_controller.rb
 │   │       ├── users_controller.rb
 │   │       └── users/
-│   │           ├── sessions_controller.rb
-│   │           ├── registrations_controller.rb
-│   │           ├── passwords_controller.rb
 │   │           ├── confirmations_controller.rb
+│   │           ├── omniauth_callbacks_controller.rb
+│   │           ├── passwords_controller.rb
+│   │           ├── registrations_controller.rb
+│   │           ├── sessions_controller.rb
 │   │           └── unlocks_controller.rb
 │   ├── policies/
-│   │   ├── application_policy.rb      # ✅ Скопировано
-│   │   └── user_policy.rb             # ✅ Скопировано
+│   │   ├── application_policy.rb      # Скопировано
+│   │   └── user_policy.rb             # Скопировано
 │   └── views/
-│       └── web/                       # ✅ Скопировано из templates
+│       └── web/                       # Скопировано
 │           ├── home/
-│           │   └── index.html.erb
+│           │   ├── index.html.erb
+│           │   ├── _frame1.html.erb
+│           │   └── _frame2.html.erb
 │           └── users/
 │               ├── index.html.erb
 │               ├── show.html.erb
 │               ├── new.html.erb
 │               ├── edit.html.erb
-│               └── _form.html.erb
+│               ├── _form.html.erb
+│               ├── confirmations/
+│               ├── mailer/
+│               ├── partials/
+│               ├── passwords/
+│               ├── registrations/
+│               ├── sessions/
+│               ├── shared/
+│               └── unlocks/
 ├── config/
+│   ├── deploy.yml                     # Kamal deploy config
 │   ├── initializers/
-│   │   ├── devise.rb                  # ✅ Скопировано
-│   │   └── pagy.rb                    # ✅ Скопировано
+│   │   ├── devise.rb                  # Скопировано
+│   │   └── pagy.rb                    # Скопировано
 │   ├── locales/
-│   │   ├── ru.yml                     # ✅ Скопировано
-│   │   └── pagy.ru.yml                # ✅ Скопировано
-│   └── routes.rb                      # ✅ Добавлены routes
+│   │   ├── devise.en.yml              # Скопировано
+│   │   ├── devise.ru.yml              # Скопировано
+│   │   ├── en.yml                     # Скопировано
+│   │   ├── pagy.ru.yml                # Скопировано
+│   │   └── ru.yml                     # Скопировано
+│   ├── routes.rb                      # Добавлены routes
+│   └── application.rb                 # Настроен (i18n, schema_format)
 ├── db/
-│   └── migrate/
-│       └── 20250130_devise_create_users.rb  # ✅ Скопировано с новым timestamp
-└── spec/                              # ✅ Скопировано из templates
+│   ├── migrate/
+│   │   └── XXXX_devise_create_users.rb  # Скопировано с новым timestamp
+│   └── seeds.rb                       # Скопировано
+└── spec/                              # Скопировано
     ├── factories/
     │   └── users.rb
     ├── features/
+    │   ├── devise/
+    │   │   ├── confirmation_resend_spec.rb
+    │   │   ├── lockable_spec.rb
+    │   │   ├── password_recovery_spec.rb
+    │   │   ├── registration_spec.rb
+    │   │   └── sign_in_spec.rb
     │   └── users/
     │       ├── create_spec.rb
-    │       ├── update_spec.rb
     │       ├── delete_spec.rb
-    │       └── search_spec.rb
-    ├── models/
-    │   └── user_spec.rb
-    ├── policies/
-    │   └── user_policy_spec.rb
+    │       ├── lock_spec.rb
+    │       └── update_spec.rb
     ├── rails_helper.rb
     ├── spec_helper.rb
     └── support/
+        ├── capybara.rb
         ├── feature_helpers.rb
         └── mail_helpers.rb
 ```
@@ -202,9 +339,10 @@ end
 # gem 'rails8_boilerplate'  # Можно удалить!
 
 # Но лучше оставить для:
-# - AdminLTE UI компонентов
+# - AdminLTE UI компонентов (layouts, assets, JS)
+# - Stimulus controllers (autohide, navigation)
+# - Helpers (buttons, fontawesome, pagy, ransack, common)
 # - Генератора custom_resource
-# - Helpers
 ```
 
 ### 4. Легко обновлять
@@ -230,7 +368,11 @@ git diff app/models/user.rb
   <!-- Ваш контент -->
 </div>
 
-<!-- Layout: rails8_boilerplate/app/views/layouts/lte/application.html.erb -->
+<!-- Layouts из engine:
+     rails8_boilerplate/app/views/layouts/application.html.erb (основной)
+     rails8_boilerplate/app/views/layouts/logon.html.erb (авторизация)
+     rails8_boilerplate/app/views/layouts/lte/* (партиалы AdminLTE)
+-->
 ```
 
 ### Helpers
@@ -243,9 +385,9 @@ git diff app/models/user.rb
 
 ### Assets
 ```erb
-<!-- Используете стили из engine -->
-<!-- AdminLTE автоматически подключается -->
-<link rel="stylesheet" href="<%= asset_path('adminlte/adminlte.css') %>">
+<!-- AdminLTE стили и скрипты подключаются автоматически через engine -->
+<!-- JS подключается через importmap (bootstrap, adminlte, fontawesome) -->
+<!-- CSS подключается через asset pipeline -->
 ```
 
 ---
@@ -290,7 +432,7 @@ rails generate custom_resource References::Brand 'Бренд'
 ```ruby
 # Если нужно изменить layout:
 # 1. Скопируйте из engine в приложение
-cp rails8_boilerplate/app/views/layouts/lte/application.html.erb \
+cp rails8_boilerplate/app/views/layouts/application.html.erb \
    app/views/layouts/application.html.erb
 
 # 2. Модифицируйте под себя
@@ -300,12 +442,17 @@ cp rails8_boilerplate/app/views/layouts/lte/application.html.erb \
 
 ## 📝 Checklist после установки
 
+- [ ] Скопировать `.env.sample` в `.env` и проверить значения
 - [ ] Настроить `config/initializers/devise.rb` (mailer_sender, secret_key)
 - [ ] Настроить `config/initializers/pagy.rb` (при необходимости)
+- [ ] Настроить `.kamal/secrets` и `config/deploy.yml` (при использовании Kamal)
+- [ ] Настроить `.env.production.sample` для production-окружения
+- [ ] Настроить GitHub Actions secrets (DEPLOY_SSH_KEY, SERVER_IP и т.д.)
+- [ ] Проверить `.rubocop.yml` и адаптировать под проект
 - [ ] Выполнить миграции: `rails db:migrate`
 - [ ] Создать seed данные: `rails db:seed`
 - [ ] Запустить тесты: `rspec`
-- [ ] Проверить работу: `rails server`
+- [ ] Проверить работу: `rails server` / `docker compose up`
 - [ ] Кастомизировать модели под свои нужды
 - [ ] Добавить свои ресурсы через `rails generate custom_resource`
 
@@ -315,7 +462,8 @@ cp rails8_boilerplate/app/views/layouts/lte/application.html.erb \
 
 ### Q: Можно ли удалить engine после установки?
 **A:** Технически да, но лучше оставить для:
-- AdminLTE UI компонентов (layouts, assets, helpers)
+- AdminLTE UI компонентов (layouts, assets, helpers, JS)
+- Stimulus controllers (autohide, navigation)
 - Генератора `custom_resource`
 - Обновлений в будущем
 
