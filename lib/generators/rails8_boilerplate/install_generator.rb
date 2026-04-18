@@ -288,9 +288,18 @@ module Rails8Boilerplate
     authenticated :user do
       root to: 'home#index', as: :authenticated_root
 
-      post 'change_frame1_color', to: 'home#change_frame1_color'
-      post 'change_frame2_color', to: 'home#change_frame2_color'
-      post 'reset_colors', to: 'home#reset_colors'
+      # Hotwire Showcase — Turbo Frames
+      get  'demo/update_frame',      to: 'home#update_frame'
+      get  'demo/lazy_frame',        to: 'home#lazy_frame'
+
+      # Hotwire Showcase — Turbo Streams
+      post 'demo/stream_append',     to: 'home#stream_append'
+      post 'demo/stream_prepend',    to: 'home#stream_prepend'
+      post 'demo/stream_remove',     to: 'home#stream_remove'
+      post 'demo/stream_replace',    to: 'home#stream_replace'
+      post 'demo/stream_multi',      to: 'home#stream_multi'
+      post 'demo/stream_form_submit', to: 'home#stream_form_submit'
+      post 'demo/toggle_todo',       to: 'home#toggle_todo'
 
       resources :users do
         member do

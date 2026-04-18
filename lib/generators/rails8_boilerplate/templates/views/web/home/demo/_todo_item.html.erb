@@ -1,0 +1,14 @@
+<div id="<%= todo[:id] %>" class="d-flex align-items-center border-bottom py-2">
+  <%= button_to demo_toggle_todo_path, method: :post, class: "btn btn-sm p-0 me-2 border-0" do %>
+    <input type="hidden" name="todo_id" value="<%= todo[:id] %>">
+    <input type="hidden" name="title" value="<%= todo[:title] %>">
+    <input type="hidden" name="done" value="<%= !todo[:done] %>">
+    <input type="hidden" name="time" value="<%= todo[:time] %>">
+    <i class="fas fa-<%= todo[:done] ? 'check-square text-success' : 'square text-muted' %> fa-lg"></i>
+  <% end %>
+  <span class="flex-grow-1 <%= 'text-decoration-line-through text-muted' if todo[:done] %>"><%= todo[:title] %></span>
+  <small class="text-muted me-2"><%= todo[:time] %></small>
+  <%= button_to demo_stream_remove_path(target_id: todo[:id]), method: :post, class: "btn btn-sm btn-outline-danger border-0 p-0" do %>
+    <i class="fas fa-trash"></i>
+  <% end %>
+</div>

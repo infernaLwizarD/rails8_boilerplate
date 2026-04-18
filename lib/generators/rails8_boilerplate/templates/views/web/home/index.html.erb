@@ -1,25 +1,353 @@
 <div class="container-fluid">
-  <div class="row">
+  <%# ==================== ЗАГОЛОВОК ==================== %>
+  <div class="row mb-4">
     <div class="col-12">
-      <p class="text-muted">Время последнего обновления страницы: <%= @current_time %></p>
+      <div class="card card-outline card-primary">
+        <div class="card-body text-center">
+          <h2><i class="fas fa-bolt text-warning"></i> Hotwire Showcase</h2>
+          <p class="text-muted mb-0">
+            Интерактивная демонстрация <strong>Turbo Frames</strong>, <strong>Turbo Streams</strong> и <strong>Stimulus</strong>.
+            Полная загрузка страницы: <code><%= @current_time %></code>
+          </p>
+        </div>
+      </div>
     </div>
   </div>
-  
-  <div class="row">
+
+  <%# ==================== СЕКЦИЯ 1: TURBO FRAMES ==================== %>
+  <div class="row mb-3">
     <div class="col-12">
-      <%= turbo_frame_tag 'frame1' do %>
-        <%= render 'web/home/frame1', background_color: nil %>
-      <% end %>
+      <h4><i class="fas fa-th-large text-primary"></i> 1. Turbo Frames</h4>
+      <p class="text-muted">Независимое обновление частей страницы без полной перезагрузки. Каждый фрейм — изолированный контейнер.</p>
     </div>
   </div>
-  
-  <div class="row mt-3">
-    <div class="col-12 text-center">
-      <%= button_to "Сбросить цвета", reset_colors_path, 
-          method: :post,
-          class: "btn btn-warning btn-lg",
-          data: { turbo_method: :post },
-          form: { data: { turbo: true } } %>
+
+  <div class="row mb-4">
+    <%# --- 1a: Обновляемый фрейм --- %>
+    <div class="col-md-6 mb-3">
+      <div class="card card-outline card-info h-100">
+        <div class="card-header">
+          <h5 class="card-title mb-0"><i class="fas fa-sync-alt"></i> Обновляемый фрейм</h5>
+        </div>
+        <div class="card-body">
+          <p class="small text-muted">Клик по кнопке обновляет <strong>только содержимое фрейма</strong>, а не всю страницу. Обратите внимание, что время в заголовке страницы НЕ меняется.</p>
+          <%= turbo_frame_tag 'quote_frame' do %>
+            <%= render 'web/home/demo/quote_frame', timestamp: @current_time, quote: 'Нажмите кнопку для загрузки цитаты' %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <%# --- 1b: Ленивая загрузка --- %>
+    <div class="col-md-6 mb-3">
+      <div class="card card-outline card-warning h-100" data-controller="demo--auto-refresh" data-demo--auto-refresh-interval-value="10000">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="card-title mb-0"><i class="fas fa-clock"></i> Lazy Loading + Авто-обновление</h5>
+          <div>
+            <span data-demo--auto-refresh-target="status" class="badge bg-secondary">Остановлено</span>
+            <button class="btn btn-sm btn-outline-primary ms-2" data-action="demo--auto-refresh#toggleAutoRefresh">
+              <i class="fas fa-play"></i> Toggle
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <p class="small text-muted">Фрейм загружается <strong>лениво</strong> (<code>loading: :lazy</code>) — запрос уходит только когда элемент попадает во viewport. Stimulus-контроллер может перезагружать его по таймеру.</p>
+          <%= turbo_frame_tag 'lazy_weather', src: demo_lazy_frame_path, loading: :lazy do %>
+            <div class="text-center py-3">
+              <div class="spinner-border text-primary" role="status"></div>
+              <p class="mt-2 text-muted">Загрузка данных о погоде...</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%# ==================== СЕКЦИЯ 2: TURBO STREAMS ==================== %>
+  <div class="row mb-3">
+    <div class="col-12">
+      <h4><i class="fas fa-stream text-success"></i> 2. Turbo Streams</h4>
+      <p class="text-muted">Точечные обновления DOM: append, prepend, replace, remove, update. Один ответ может содержать несколько операций.</p>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <%# --- 2a: Append — чат-сообщения --- %>
+    <div class="col-md-6 mb-3">
+      <div class="card card-outline card-success h-100">
+        <div class="card-header">
+          <h5 class="card-title mb-0"><i class="fas fa-comment-dots"></i> Stream: Append (чат)</h5>
+        </div>
+        <div class="card-body">
+          <p class="small text-muted">Каждое сообщение <strong>добавляется в конец</strong> списка (<code>turbo_stream.append</code>). Элементы можно удалять кликом (<code>turbo_stream.remove</code>).</p>
+          <div id="messages_list" class="border rounded p-2 mb-3" style="max-height: 200px; overflow-y: auto;">
+            <p class="text-muted text-center small mb-0" id="messages_empty">Сообщений пока нет</p>
+          </div>
+          <div data-controller="demo--char-count">
+            <%= form_with url: demo_stream_append_path, method: :post, data: { controller: "demo--form-reset", action: "turbo:submit-end->demo--form-reset#reset" } do |f| %>
+              <div class="input-group">
+                <%= f.text_field :text, class: "form-control form-control-sm", placeholder: "Введите сообщение...", data: { "demo--char-count-target": "input", action: "input->demo--char-count#input" } %>
+                <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-paper-plane"></i></button>
+              </div>
+              <small>Осталось: <span data-demo--char-count-target="count" class="text-muted">140</span></small>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%# --- 2b: Prepend — уведомления --- %>
+    <div class="col-md-6 mb-3">
+      <div class="card card-outline card-danger h-100">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="card-title mb-0"><i class="fas fa-bell"></i> Stream: Prepend (уведомления)</h5>
+          <%= button_to "Добавить уведомление", demo_stream_prepend_path, method: :post, class: "btn btn-sm btn-outline-danger" %>
+        </div>
+        <div class="card-body">
+          <p class="small text-muted">Новые уведомления <strong>добавляются в начало</strong> (<code>turbo_stream.prepend</code>). Каждое можно закрыть (<code>turbo_stream.remove</code>).</p>
+          <div id="notifications_list" style="max-height: 250px; overflow-y: auto;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <%# --- 2c: Replace — серверный счётчик --- %>
+    <div class="col-md-6 mb-3">
+      <div class="card card-outline card-purple h-100">
+        <div class="card-header">
+          <h5 class="card-title mb-0"><i class="fas fa-exchange-alt"></i> Stream: Replace (серверный счётчик)</h5>
+        </div>
+        <div class="card-body text-center" data-controller="demo--server-counter">
+          <p class="small text-muted">Значение обрабатывается <strong>на сервере</strong> и возвращается через <code>turbo_stream.update</code>. В отличие от Stimulus-счётчика (секция 3), состояние на бэкенде.</p>
+          <div id="server_counter" class="display-4 fw-bold my-3" data-demo--server-counter-target="display">0</div>
+          <div class="d-flex justify-content-center gap-2">
+            <%= form_with url: demo_stream_replace_path, method: :post, class: "d-inline", data: { action: "submit->demo--server-counter#updateFields" } do |f| %>
+              <%= f.hidden_field :current, value: 0, data: { 'demo--server-counter-target': "currentField" } %>
+              <%= f.hidden_field :value, value: -1 %>
+              <button type="submit" class="btn btn-outline-danger"><i class="fas fa-minus"></i> -1</button>
+            <% end %>
+            <%= form_with url: demo_stream_replace_path, method: :post, class: "d-inline", data: { action: "submit->demo--server-counter#updateFields" } do |f| %>
+              <%= f.hidden_field :current, value: 0, data: { 'demo--server-counter-target': "currentField" } %>
+              <%= f.hidden_field :value, value: 0 %>
+              <button type="submit" class="btn btn-outline-secondary"><i class="fas fa-undo"></i> Reset</button>
+            <% end %>
+            <%= form_with url: demo_stream_replace_path, method: :post, class: "d-inline", data: { action: "submit->demo--server-counter#updateFields" } do |f| %>
+              <%= f.hidden_field :current, value: 0, data: { 'demo--server-counter-target': "currentField" } %>
+              <%= f.hidden_field :value, value: 1 %>
+              <button type="submit" class="btn btn-outline-success"><i class="fas fa-plus"></i> +1</button>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%# --- 2d: Multi-stream — обновление нескольких элементов за один запрос --- %>
+    <div class="col-md-6 mb-3">
+      <div class="card card-outline card-teal h-100">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="card-title mb-0"><i class="fas fa-layer-group"></i> Multi-Stream (несколько обновлений)</h5>
+          <%= button_to "Обновить всё", demo_stream_multi_path, method: :post, class: "btn btn-sm btn-outline-info" %>
+        </div>
+        <div class="card-body">
+          <p class="small text-muted">Один POST-запрос возвращает <strong>несколько turbo_stream</strong> операций, обновляя разные части страницы одновременно.</p>
+          <div class="row text-center">
+            <div class="col-4">
+              <div class="card bg-light">
+                <div class="card-body py-2">
+                  <div id="stat_requests" class="h4 mb-0">—</div>
+                  <small class="text-muted">Запросов</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card bg-light">
+                <div class="card-body py-2">
+                  <div id="stat_users" class="h4 mb-0">—</div>
+                  <small class="text-muted">Онлайн</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card bg-light">
+                <div class="card-body py-2">
+                  <div id="stat_uptime" class="h4 mb-0">—</div>
+                  <small class="text-muted">Аптайм</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="text-center mt-2">
+            <small class="text-muted">Обновлено: <span id="stat_time">никогда</span></small>
+            <span id="stat_color_indicator" class="ms-2 d-inline-block rounded-circle" style="width:12px; height:12px; background:#ccc;"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%# ==================== СЕКЦИЯ 2e: TURBO STREAM + ФОРМА (TODO) ==================== %>
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card card-outline card-olive">
+        <div class="card-header">
+          <h5 class="card-title mb-0"><i class="fas fa-tasks"></i> Stream + Form: Inline Todo-лист</h5>
+        </div>
+        <div class="card-body">
+          <p class="small text-muted">
+            Форма отправляется через Turbo, элемент добавляется через <code>turbo_stream.append</code>, форма очищается Stimulus-контроллером <code>form-reset</code>.
+            Чекбокс переключает состояние через <code>turbo_stream.replace</code>.
+          </p>
+          <%= form_with url: demo_stream_form_submit_path, method: :post, class: "mb-3", data: { controller: "demo--form-reset", action: "turbo:submit-end->demo--form-reset#reset" } do |f| %>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-plus-circle text-success"></i></span>
+              <%= f.text_field :title, class: "form-control", placeholder: "Новая задача...", required: true %>
+              <button type="submit" class="btn btn-success">Добавить</button>
+            </div>
+          <% end %>
+          <div id="todo_list">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%# ==================== СЕКЦИЯ 3: STIMULUS ==================== %>
+  <div class="row mb-3">
+    <div class="col-12">
+      <h4><i class="fas fa-microchip text-info"></i> 3. Stimulus</h4>
+      <p class="text-muted">Минимальный JavaScript-фреймворк для добавления поведения к HTML. Никакого рендеринга на клиенте — только управление существующим DOM.</p>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <%# --- 3a: Счётчик (клиентский) --- %>
+    <div class="col-md-4 mb-3">
+      <div class="card card-outline card-cyan h-100">
+        <div class="card-header">
+          <h5 class="card-title mb-0"><i class="fas fa-calculator"></i> Клиентский счётчик</h5>
+        </div>
+        <div class="card-body text-center" data-controller="demo--counter">
+          <p class="small text-muted">Чисто клиентская логика через Stimulus: <code>values</code>, <code>targets</code>, <code>actions</code>.</p>
+          <div class="display-3 fw-bold my-3" data-demo--counter-target="count">0</div>
+          <div class="d-flex justify-content-center gap-2">
+            <button class="btn btn-outline-danger" data-action="demo--counter#decrement"><i class="fas fa-minus"></i></button>
+            <button class="btn btn-outline-secondary" data-action="demo--counter#reset"><i class="fas fa-undo"></i></button>
+            <button class="btn btn-outline-success" data-action="demo--counter#increment"><i class="fas fa-plus"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%# --- 3b: Toggle --- %>
+    <div class="col-md-4 mb-3">
+      <div class="card card-outline card-lime h-100">
+        <div class="card-header">
+          <h5 class="card-title mb-0"><i class="fas fa-eye"></i> Toggle-контроллер</h5>
+        </div>
+        <div class="card-body" data-controller="demo--toggle">
+          <p class="small text-muted">Переключение видимости элементов через <code>data-action</code> и CSS-классы.</p>
+          <button class="btn btn-outline-primary btn-sm mb-3" data-action="demo--toggle#toggle">
+            <i class="fas fa-eye-slash"></i> Показать / Скрыть
+          </button>
+          <div data-demo--toggle-target="content" class="d-none">
+            <div class="alert alert-info mb-0">
+              <i class="fas fa-info-circle"></i> Этот блок управляется Stimulus-контроллером <code>toggle</code>.
+              Ни одного HTTP-запроса не отправлено!
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%# --- 3c: Clipboard --- %>
+    <div class="col-md-4 mb-3">
+      <div class="card card-outline card-indigo h-100">
+        <div class="card-header">
+          <h5 class="card-title mb-0"><i class="fas fa-clipboard"></i> Clipboard API</h5>
+        </div>
+        <div class="card-body" data-controller="demo--clipboard">
+          <p class="small text-muted">Копирование текста в буфер обмена через Stimulus + <code>navigator.clipboard</code>.</p>
+          <div class="input-group mb-2">
+            <input type="text" class="form-control" value="bundle exec rails hotwire:install" readonly data-demo--clipboard-target="source">
+            <button class="btn btn-outline-secondary" data-demo--clipboard-target="button" data-action="demo--clipboard#copy">
+              <i class="fas fa-copy"></i> Копировать
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%# ==================== СЕКЦИЯ 4: ШПАРГАЛКА ==================== %>
+  <div class="row mb-4">
+    <div class="col-12" data-controller="demo--toggle">
+      <div class="card card-outline card-secondary">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="card-title mb-0"><i class="fas fa-book"></i> Шпаргалка по Hotwire</h5>
+          <button class="btn btn-sm btn-outline-secondary" data-action="demo--toggle#toggle">
+            <i class="fas fa-chevron-down"></i> Развернуть
+          </button>
+        </div>
+        <div data-demo--toggle-target="content" class="d-none">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4">
+                <h6 class="fw-bold text-primary">Turbo Drive</h6>
+                <ul class="small">
+                  <li>Автоматически перехватывает ссылки и формы</li>
+                  <li>Заменяет <code>&lt;body&gt;</code> без полной перезагрузки</li>
+                  <li><code>data-turbo="false"</code> — отключить для элемента</li>
+                  <li><code>data-turbo-action="advance|replace"</code></li>
+                </ul>
+              </div>
+              <div class="col-md-4">
+                <h6 class="fw-bold text-success">Turbo Frames</h6>
+                <ul class="small">
+                  <li><code>&lt;turbo-frame id="..."&gt;</code></li>
+                  <li><code>src:</code> — загрузка из другого URL</li>
+                  <li><code>loading: :lazy</code> — ленивая загрузка</li>
+                  <li><code>target: "_top"</code> — выход из фрейма</li>
+                  <li><code>data-turbo-frame</code> — привязка ссылки к фрейму</li>
+                </ul>
+              </div>
+              <div class="col-md-4">
+                <h6 class="fw-bold text-danger">Turbo Streams</h6>
+                <ul class="small">
+                  <li><code>turbo_stream.append</code> / <code>.prepend</code></li>
+                  <li><code>turbo_stream.replace</code> / <code>.update</code></li>
+                  <li><code>turbo_stream.remove</code></li>
+                  <li><code>turbo_stream.before</code> / <code>.after</code></li>
+                  <li>Формат: <code>format.turbo_stream</code> в контроллере</li>
+                </ul>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-md-6">
+                <h6 class="fw-bold text-info">Stimulus</h6>
+                <ul class="small">
+                  <li><code>data-controller="name"</code> — подключение</li>
+                  <li><code>data-action="event->controller#method"</code></li>
+                  <li><code>data-controller-target="name"</code> — targets</li>
+                  <li><code>static values = { key: Type }</code></li>
+                  <li>Lifecycle: <code>connect()</code>, <code>disconnect()</code></li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <h6 class="fw-bold text-warning">Stimulus + Turbo</h6>
+                <ul class="small">
+                  <li><code>turbo:submit-end</code> — после отправки формы</li>
+                  <li><code>turbo:before-fetch-request</code></li>
+                  <li><code>turbo:frame-load</code> — после загрузки фрейма</li>
+                  <li>Stimulus подключается к новым элементам автоматически</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

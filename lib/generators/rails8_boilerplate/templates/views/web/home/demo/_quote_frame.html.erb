@@ -1,0 +1,11 @@
+<div class="border rounded p-3 bg-light">
+  <blockquote class="blockquote mb-2">
+    <p class="mb-0 small"><i class="fas fa-quote-left text-muted me-1"></i> <%= quote %></p>
+  </blockquote>
+  <p class="small mb-2">
+    <i class="fas fa-clock text-muted"></i> Фрейм обновлён: <code><%= timestamp %></code>
+  </p>
+  <%= link_to demo_update_frame_path, class: "btn btn-sm btn-info", data: { turbo_frame: "quote_frame" } do %>
+    <i class="fas fa-sync-alt"></i> Обновить фрейм
+  <% end %>
+</div>

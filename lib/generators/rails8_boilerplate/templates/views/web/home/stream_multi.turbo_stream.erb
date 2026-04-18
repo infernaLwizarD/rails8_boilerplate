@@ -1,0 +1,19 @@
+<%= turbo_stream.update "stat_requests" do %>
+  <%= number_with_delimiter(@stat_requests) %>
+<% end %>
+
+<%= turbo_stream.update "stat_users" do %>
+  <%= @stat_users %>
+<% end %>
+
+<%= turbo_stream.update "stat_uptime" do %>
+  <%= @stat_uptime %>
+<% end %>
+
+<%= turbo_stream.update "stat_time" do %>
+  <%= @time %>
+<% end %>
+
+<%= turbo_stream.update "stat_color_indicator" do %>
+  <span class="d-inline-block rounded-circle" style="width:12px; height:12px; background:<%= @color %>;"></span>
+<% end %>

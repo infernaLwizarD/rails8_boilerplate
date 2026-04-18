@@ -1,0 +1,4 @@
+<%= turbo_stream.append "messages_list" do %>
+  <%= render 'web/home/demo/message_item', message: @message %>
+<% end %>
+<%= turbo_stream.remove "messages_empty" %>
