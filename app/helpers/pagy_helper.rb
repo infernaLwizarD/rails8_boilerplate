@@ -26,7 +26,7 @@ module PagyHelper
                 )}</li>)
               when :gap
                 %(<li class="page-item gap disabled">#{link_to(
-                  pagy_t('pagy.gap'),
+                  pagy_t('pagy.gap').html_safe,
                   '#',
                   class: 'page-link',
                   role: 'link',
@@ -48,13 +48,13 @@ module PagyHelper
     if pagy.prev
       %(<li class="page-item prev">#{anchor.call(
         pagy.prev,
-        pagy_t('pagy.prev'),
+        pagy_t('pagy.prev').html_safe,
         classes: 'page-link',
         aria_label: pagy_t('pagy.aria_label.prev')
       )}</li>)
     else
       %(<li class="page-item prev disabled">#{link_to(
-        pagy_t('pagy.prev'),
+        pagy_t('pagy.prev').html_safe,
         '#',
         class: 'page-link',
         role: 'link',
@@ -67,13 +67,13 @@ module PagyHelper
   def forward_button(pagy, anchor)
     if pagy.next
       %(<li class="page-item next">#{anchor.call(
-        pagy.next, pagy_t('pagy.next'),
+        pagy.next, pagy_t('pagy.next').html_safe,
         classes: 'page-link',
         aria_label: pagy_t('pagy.aria_label.next')
       )}</li>)
     else
       %(<li class="page-item next disabled">#{link_to(
-        pagy_t('pagy.next'),
+        pagy_t('pagy.next').html_safe,
         '#',
         class: 'page-link',
         role: 'link',
