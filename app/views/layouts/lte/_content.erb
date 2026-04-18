@@ -1,15 +1,9 @@
 <div class="app-main">
-  <div id="breadcrumbs">
-    <%= render 'layouts/lte/partials/breadcrumbs' %>
-  </div>
+  <%= render 'layouts/lte/partials/breadcrumbs' %>
   <div class="app-content">
     <div class="container-fluid">
-      <div id="flash">
-        <%= render 'layouts/lte/partials/flash' %>
-      </div>
-      <div id="content">
-        <%= yield %>
-      </div>
+      <%= render 'layouts/lte/partials/flash' %>
+      <%= yield %>
     </div>
   </div>
 </div>

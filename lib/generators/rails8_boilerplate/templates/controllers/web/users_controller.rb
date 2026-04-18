@@ -1,5 +1,4 @@
 class Web::UsersController < Web::ApplicationController
-  # respond_to :html, :json # , :turbo_stream
   before_action :find_and_authorize_user, except: %i[new create index]
 
   def index
@@ -12,16 +11,10 @@ class Web::UsersController < Web::ApplicationController
 
     @main_title = 'Пользователи'
     set_user_breadcrumbs
-
-    render_turbo_response('web/users/index', breadcrumbs: true)
   end
 
   def show
-    @user.password = nil
-
     set_user_breadcrumbs({ title: @user.email, path: user_path(@user) })
-
-    render_turbo_response('web/users/show', breadcrumbs: true)
   end
 
   def new
@@ -30,14 +23,10 @@ class Web::UsersController < Web::ApplicationController
     @user = User.new
 
     set_user_breadcrumbs({ title: 'Новый пользователь' })
-
-    render_turbo_response('web/users/new', breadcrumbs: true)
   end
 
   def edit
     set_user_breadcrumbs({ title: @user.email, path: user_path(@user) })
-
-    render_turbo_response('web/users/edit', flash: true)
   end
 
   def create
@@ -46,52 +35,45 @@ class Web::UsersController < Web::ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      flash.now[:notice] = 'Пользователь успешно создан'
-      set_user_breadcrumbs({ title: @user.email, path: user_path(@user) })
-      render_turbo_response('web/users/show', breadcrumbs: true, flash: true)
+      flash[:notice] = 'Пользователь успешно создан'
+      redirect_to user_path(@user)
     else
       set_user_breadcrumbs({ title: 'Новый пользователь' })
-      render_turbo_response('web/users/new', breadcrumbs: true)
+      render :new, status: :unprocessable_entity
     end
   end
 
   def update
     if @user.update(user_params)
-      flash.now[:notice] = 'Пользователь отредактирован' if @user.saved_changes?
-
-      render_turbo_response('web/users/show', flash: true)
+      flash[:notice] = 'Пользователь отредактирован' if @user.saved_changes?
+      redirect_to user_path(@user)
     else
-      render_turbo_response('web/users/edit')
+      render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
     @user.discard
-
-    flash.now[:alert] = 'Пользователь удалён'
-
-    render_turbo_response('web/users/show', flash: true)
+    flash[:alert] = 'Пользователь удалён'
+    redirect_to user_path(@user)
   end
 
   def restore
     @user.undiscard!
-    flash.now[:notice] = 'Пользователь восстановлен'
-
-    render_turbo_response('web/users/show', flash: true)
+    flash[:notice] = 'Пользователь восстановлен'
+    redirect_to user_path(@user)
   end
 
   def lock
     @user.lock_access!(send_instructions: false)
-    flash.now[:notice] = 'Пользователь заблокирован'
-
-    render_turbo_response('web/users/show', flash: true)
+    flash[:notice] = 'Пользователь заблокирован'
+    redirect_to user_path(@user)
   end
 
   def unlock
     @user.unlock_access!
-    flash.now[:notice] = 'Пользователь разблокирован'
-
-    render_turbo_response('web/users/show', flash: true)
+    flash[:notice] = 'Пользователь разблокирован'
+    redirect_to user_path(@user)
   end
 
   private
@@ -102,15 +84,12 @@ class Web::UsersController < Web::ApplicationController
   end
 
   def user_params
-    params[:user].delete(:password) if params.dig(:user, :password).blank?
-    attributes = %i[username email password role]
+    attrs = %i[username email password role]
+    attrs << :password_confirmation if action_name == 'create'
 
-    if params[:action] == 'create'
-      params[:user].delete(:password_confirmation) if params[:user][:password].blank?
-      attributes.push(:password_confirmation)
-    end
-
-    params.expect(user: attributes)
+    permitted = params.expect(user: attrs)
+    permitted.delete(:password) if permitted[:password].blank?
+    permitted
   end
 
   def set_user_breadcrumbs(additional = nil)

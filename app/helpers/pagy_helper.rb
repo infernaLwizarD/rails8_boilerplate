@@ -1,7 +1,7 @@
 module PagyHelper
   # кастомный хелпер на основе pagy_bootstrap_nav (pagy/gem/lib/pagy/extras/bootstrap.rb) [pagy 9.3.4]
   def pagy_bootstrap_nav_custom(pagy, id: nil, classes: 'pagination pagination-sm mb-0', aria_label: nil, **vars)
-    a = pagy_anchor(pagy, anchor_string: 'data-turbo-stream="true"', **vars)
+    a = pagy_anchor(pagy, **vars)
     id_attr = id ? %( id="#{id}") : ''
     aria_attr = aria_label || pagy_t('pagy.aria_label.nav')
 
@@ -16,7 +16,7 @@ module PagyHelper
               when Integer
                 %(<li class="page-item">#{a.call(item, classes: 'page-link')}</li>)
               when String
-                %(<li class="page-item active">#{ts_link_to(
+                %(<li class="page-item active">#{link_to(
                   pagy.label_for(item),
                   '#',
                   class: 'page-link',
@@ -25,7 +25,7 @@ module PagyHelper
                   'aria-disabled': 'true'
                 )}</li>)
               when :gap
-                %(<li class="page-item gap disabled">#{ts_link_to(
+                %(<li class="page-item gap disabled">#{link_to(
                   pagy_t('pagy.gap'),
                   '#',
                   class: 'page-link',
@@ -53,7 +53,7 @@ module PagyHelper
         aria_label: pagy_t('pagy.aria_label.prev')
       )}</li>)
     else
-      %(<li class="page-item prev disabled">#{ts_link_to(
+      %(<li class="page-item prev disabled">#{link_to(
         pagy_t('pagy.prev'),
         '#',
         class: 'page-link',
@@ -72,7 +72,7 @@ module PagyHelper
         aria_label: pagy_t('pagy.aria_label.next')
       )}</li>)
     else
-      %(<li class="page-item next disabled">#{ts_link_to(
+      %(<li class="page-item next disabled">#{link_to(
         pagy_t('pagy.next'),
         '#',
         class: 'page-link',

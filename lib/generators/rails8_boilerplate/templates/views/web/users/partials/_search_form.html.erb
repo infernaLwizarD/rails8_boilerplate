@@ -1,4 +1,4 @@
-<%= search_form_for q, data: { turbo_stream: true }, class: 'd-flex align-items-center gap-2' do |f| %>
+<%= search_form_for q, class: 'd-flex align-items-center gap-2', data: { controller: 'auto-submit' } do |f| %>
   <%= f.search_field(:search_cont,
                      value: params.dig(:q, :search_cont),
                      placeholder: 'Поиск',
@@ -7,10 +7,10 @@
     <%= f.select(:by_state,
                  [['Активные', 'active'], ['Заблокированные', 'locked'], ['Удалённые', 'discarded']],
                  { include_blank: '[Все]', selected: params.dig(:q, :by_state) },
-                 { class: 'form-control form-control-sm', onchange: 'this.form.requestSubmit();' }) %>
+                 { class: 'form-control form-control-sm', data: { action: 'change->auto-submit#submit' } }) %>
     <%= f.select(:role_eq,
                  User.user_role_collection,
                  { include_blank: '[Все роли]' },
-                 { class: 'form-control form-control-sm', onchange: 'this.form.requestSubmit();' }) %>
+                 { class: 'form-control form-control-sm', data: { action: 'change->auto-submit#submit' } }) %>
   <% end %>
 <% end %>

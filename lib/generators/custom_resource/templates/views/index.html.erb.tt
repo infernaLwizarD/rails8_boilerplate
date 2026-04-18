@@ -18,8 +18,8 @@
         <table id="<%= resource_name_plural %>-table" class="table table-striped table-bordered table-sm">
           <thead>
           <tr>
-            <th class="w-60"><%%= turbo_sort_link(@q, :id, 'ID') %></th>
-            <th><%%= turbo_sort_link(@q, :label, 'Наименование') %></th>
+            <th class="w-60"><%%= sort_link(@q, :id, 'ID') %></th>
+            <th><%%= sort_link(@q, :label, 'Наименование') %></th>
           </tr>
           </thead>
           <tbody>
@@ -30,8 +30,8 @@
                          end
             %>
             <tr>
-              <td<%%= td_class %>><%%= ts_link_to(<%= resource_name %>.id, <%= resource_name %>) %></td>
-              <td<%%= td_class %>><%%= ts_link_to(<%= resource_name %>.label, <%= resource_name %>) %></td>
+              <td<%%= td_class %>><%%= link_to(<%= resource_name %>.id, <%= resource_name %>) %></td>
+              <td<%%= td_class %>><%%= link_to(<%= resource_name %>.label, <%= resource_name %>) %></td>
             </tr>
           <%% end %>
           </tbody>

@@ -1,10 +1,16 @@
-import { Controller } from "@hotwired/stimulus";
+import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
+    static values = { delay: { type: Number, default: 4444 } }
+
     connect() {
-        setTimeout(() => {
+        this.timeout = setTimeout(() => {
             this.dismiss()
-        }, 4444)
+        }, this.delayValue)
+    }
+
+    disconnect() {
+        clearTimeout(this.timeout)
     }
 
     dismiss() {

@@ -35,7 +35,7 @@
 ### Остаётся в Engine:
 - **AdminLTE 4** — современный UI фреймворк (CSS, JS, Bootstrap, FontAwesome)
 - **Layouts** — application, logon, партиалы (header, sidebar, footer, flash, breadcrumbs)
-- **Helpers** — ApplicationHelper, ButtonsHelper, CommonHelper, FontAwesomeHelper, PagyHelper, RansackHelper
+- **Helpers** — ApplicationHelper, ButtonsHelper, CommonHelper, FontAwesomeHelper, PagyHelper
 - **Assets** — стили, скрипты, изображения
 - **Stimulus controllers** — autohide, navigation
 - **Importmap** — конфигурация JS-зависимостей
@@ -160,7 +160,6 @@ rails generate custom_resource References::Brand 'Бренд'
 - `CommonHelper` — общие вспомогательные методы
 - `FontAwesomeHelper` — иконки
 - `PagyHelper` — пагинация
-- `RansackHelper` — поиск
 
 #### Policies
 - `ApplicationPolicy` — базовая политика

@@ -31,9 +31,9 @@ module Support
       icon_name = 'file-alt'
       menu_code = <<~MENU
         <li class="nav-item">
-          <%= ts_link_to(icon('nav-icon fas', '#{icon_name}', content_tag('p', '#{resource_label_plural}')),
-                         #{route_path}_path,
-                         class: 'nav-link align-items-center gap-1') %>
+          <%= link_to(icon('nav-icon fas', '#{icon_name}', content_tag('p', '#{resource_label_plural}')),
+                       #{route_path}_path,
+                       class: 'nav-link align-items-center gap-1') %>
         </li>
       MENU
 

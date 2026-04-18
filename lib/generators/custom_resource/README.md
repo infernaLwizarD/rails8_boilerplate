@@ -133,9 +133,9 @@ end
 
 ```erb
 <li class="nav-item">
-  <%= ts_link_to(icon('nav-icon fas', 'file-alt', content_tag('p', 'Категории непродовольственных товаров')),
-                 references_item_categories_path,
-                 class: 'nav-link align-items-center gap-1') %>
+  <%= link_to(icon('nav-icon fas', 'file-alt', content_tag('p', 'Категории непродовольственных товаров')),
+               references_item_categories_path,
+               class: 'nav-link align-items-center gap-1') %>
 </li>
 ```
 

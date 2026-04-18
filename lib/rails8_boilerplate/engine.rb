@@ -30,7 +30,7 @@ module Rails8Boilerplate
 
       ActiveSupport.on_load(:action_controller_base) do
         # Загружаем хелперы из engine: для ApplicationHelper — дополняет существующий
-        # модуль хост-приложения методами engine (ts_link_to и др.),
+        # модуль хост-приложения методами engine,
         # для остальных (ButtonsHelper, CommonHelper и т.д.) — создаёт модули
         Dir[engine_helpers.join('*.rb')].sort.each { |f| require f }
 
@@ -38,7 +38,6 @@ module Rails8Boilerplate
         helper ::CommonHelper
         helper ::FontAwesomeHelper
         helper ::PagyHelper
-        helper ::RansackHelper
       end
     end
 

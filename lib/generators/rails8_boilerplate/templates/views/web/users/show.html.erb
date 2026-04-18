@@ -20,10 +20,10 @@
       <%= draw_edit_button(path: edit_user_path(@user)) %>
     <% end %>
     <% if policy(@user).lock? %>
-      <%= ts_link_to(icon('fas', 'lock', 'Заблокировать'), lock_user_path(@user), class: 'btn btn-sm btn-warning', data: { turbo_method: :post }) %>
+      <%= link_to(icon('fas', 'lock', 'Заблокировать'), lock_user_path(@user), class: 'btn btn-sm btn-warning', data: { turbo_method: :post }) %>
     <% end %>
     <% if policy(@user).unlock? %>
-      <%= ts_link_to(icon('fas', 'unlock', 'Разблокировать'), unlock_user_path(@user), class: 'btn btn-sm btn-warning', data: { turbo_method: :post }) %>
+      <%= link_to(icon('fas', 'unlock', 'Разблокировать'), unlock_user_path(@user), class: 'btn btn-sm btn-warning', data: { turbo_method: :post }) %>
     <% end %>
 
     <%= draw_back_button(path: users_path) %>

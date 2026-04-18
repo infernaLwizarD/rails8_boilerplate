@@ -30,18 +30,21 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'pundit', '~> 2.3'
   spec.add_dependency 'ransack', '~> 4.2'
   spec.add_dependency 'colorize', '~> 1.1'
-  
-  spec.add_development_dependency 'factory_bot_rails', '~> 6.4'
-  spec.add_development_dependency 'faker', '~> 3.5'
-  spec.add_development_dependency 'rspec-rails', '~> 8.0'
-  spec.add_development_dependency 'capybara', '~> 3.40'
-  spec.add_development_dependency 'selenium-webdriver', '~> 4.27'
-  spec.add_development_dependency 'webdrivers', '~> 5.3'
-  spec.add_development_dependency 'email_spec', '~> 2.2'
-  spec.add_development_dependency 'test-prof', '~> 1.4'
-  spec.add_development_dependency 'rubocop', '~> 1.69'
-  spec.add_development_dependency 'rubocop-rails', '~> 2.27'
-  spec.add_development_dependency 'rubocop-rspec', '~> 3.2'
-  spec.add_development_dependency 'rubocop-performance', '~> 1.23'
-  spec.add_development_dependency 'rubocop-factory_bot', '~> 2.26'
+
+  # Development dependencies не устанавливаются Bundler для path-гемов.
+  # Все тестовые и dev-гемы должны быть в Gemfile хост-приложения.
+  # Установщик rails_app_maker добавляет их автоматически при --boilerplate.
+  # spec.add_development_dependency 'factory_bot_rails', '~> 6.4'
+  # spec.add_development_dependency 'faker', '~> 3.5'
+  # spec.add_development_dependency 'rspec-rails', '~> 8.0'
+  # spec.add_development_dependency 'capybara', '~> 3.40'
+  # spec.add_development_dependency 'selenium-webdriver', '~> 4.27'
+  # spec.add_development_dependency 'webdrivers', '~> 5.3'
+  # spec.add_development_dependency 'email_spec', '~> 2.2'
+  # spec.add_development_dependency 'test-prof', '~> 1.4'
+  # spec.add_development_dependency 'rubocop', '~> 1.69'
+  # spec.add_development_dependency 'rubocop-rails', '~> 2.27'
+  # spec.add_development_dependency 'rubocop-rspec', '~> 3.2'
+  # spec.add_development_dependency 'rubocop-performance', '~> 1.23'
+  # spec.add_development_dependency 'rubocop-factory_bot', '~> 2.26'
 end

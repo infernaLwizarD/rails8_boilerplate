@@ -11,15 +11,11 @@ class <%= controller_class_name %> < Web::ApplicationController
 
     @main_title = '<%= resource_label_plural %>'
     set_<%= resource_name %>_breadcrumbs
-
-    render_turbo_response('web/<%= files_path %>/index', breadcrumbs: true)
   end
 
   def show
     set_<%= resource_name %>_breadcrumbs({ title: @<%= resource_name %>.label,
                                     path: <%= route_path %>_path(@<%= resource_name %>) })
-
-    render_turbo_response('web/<%= files_path %>/show', breadcrumbs: true)
   end
 
   def new
@@ -28,15 +24,11 @@ class <%= controller_class_name %> < Web::ApplicationController
     @<%= resource_name %> = <%= class_name %>.new
 
     set_<%= resource_name %>_breadcrumbs({ title: <%= new_resource_title.inspect %> })
-
-    render_turbo_response('web/<%= files_path %>/new', breadcrumbs: true)
   end
 
   def edit
     set_<%= resource_name %>_breadcrumbs({ title: @<%= resource_name %>.label,
                                     path: <%= route_path %>_path(@<%= resource_name %>) })
-
-    render_turbo_response('web/<%= files_path %>/edit', flash: true)
   end
 
   def create
@@ -46,52 +38,45 @@ class <%= controller_class_name %> < Web::ApplicationController
     @<%= resource_name %>.creator = current_user
 
     if @<%= resource_name %>.save
-      flash.now[:notice] = <%= create_success_message.inspect %>
-      set_<%= resource_name %>_breadcrumbs({ title: @<%= resource_name %>.label,
-                                      path: <%= route_path %>_path(@<%= resource_name %>) })
-      render_turbo_response('web/<%= files_path %>/show', breadcrumbs: true, flash: true)
+      flash[:notice] = <%= create_success_message.inspect %>
+      redirect_to <%= route_path %>_path(@<%= resource_name %>)
     else
       set_<%= resource_name %>_breadcrumbs({ title: <%= new_resource_title.inspect %> })
-      render_turbo_response('web/<%= files_path %>/new', breadcrumbs: true)
+      render :new, status: :unprocessable_entity
     end
   end
 
   def update
     if @<%= resource_name %>.update(<%= resource_name %>_params)
-      flash.now[:notice] = <%= update_success_message.inspect %> if @<%= resource_name %>.saved_changes?
-
-      render_turbo_response('web/<%= files_path %>/show', flash: true)
+      flash[:notice] = <%= update_success_message.inspect %> if @<%= resource_name %>.saved_changes?
+      redirect_to <%= route_path %>_path(@<%= resource_name %>)
     else
-      render_turbo_response('web/<%= files_path %>/edit')
+      render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
     @<%= resource_name %>.discard
-    flash.now[:notice] = <%= destroy_message.inspect %>
-
-    render_turbo_response('web/<%= files_path %>/show', flash: true)
+    flash[:notice] = <%= destroy_message.inspect %>
+    redirect_to <%= route_path %>_path(@<%= resource_name %>)
   end
 
   def restore
     @<%= resource_name %>.undiscard!
-    flash.now[:notice] = <%= restore_message.inspect %>
-
-    render_turbo_response('web/<%= files_path %>/show', flash: true)
+    flash[:notice] = <%= restore_message.inspect %>
+    redirect_to <%= route_path %>_path(@<%= resource_name %>)
   end
 
   def lock
     @<%= resource_name %>.lock_access!(send_instructions: false)
-    flash.now[:notice] = <%= lock_message.inspect %>
-
-    render_turbo_response('web/<%= files_path %>/show', flash: true)
+    flash[:notice] = <%= lock_message.inspect %>
+    redirect_to <%= route_path %>_path(@<%= resource_name %>)
   end
 
   def unlock
     @<%= resource_name %>.unlock_access!
-    flash.now[:notice] = <%= unlock_message.inspect %>
-
-    render_turbo_response('web/<%= files_path %>/show', flash: true)
+    flash[:notice] = <%= unlock_message.inspect %>
+    redirect_to <%= route_path %>_path(@<%= resource_name %>)
   end
 
   private

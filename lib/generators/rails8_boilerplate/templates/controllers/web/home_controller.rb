@@ -3,7 +3,7 @@ class Web::HomeController < Web::ApplicationController
     @current_time = Time.zone.now.strftime('%H:%M:%S')
     @main_title = 'Демонстрация возможностей Hotwire'
 
-    render_turbo_response('web/home/index', breadcrumbs: true)
+    @breadcrumbs = []
   end
 
   def change_frame1_color
