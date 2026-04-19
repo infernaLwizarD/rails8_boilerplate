@@ -3,18 +3,14 @@ module CommonHelper
     options[:title] ||= ''
     options[:size] ||= 1
 
-    %(
-      <section class="content-header"> \
-      <div class="container-fluid"> \
-          <div class="row mb-2"> \
-              <div class="col-sm-6"> \
-                  <h#{options[:size]}>#{options[:title]}</h#{options[:size]}> \
-              </div> \
-              <div class="col-sm-6"></div> \
-          </div> \
-      </div> \
-      </section> \
-    ).html_safe
+    content_tag(:section, class: 'content-header') do
+      content_tag(:div, class: 'container-fluid') do
+        content_tag(:div, class: 'row mb-2') do
+          content_tag(:div, content_tag(:"h#{options[:size]}", options[:title]), class: 'col-sm-6') +
+            content_tag(:div, nil, class: 'col-sm-6')
+        end
+      end
+    end
   end
 
   def checkbox_val(object, options = {})

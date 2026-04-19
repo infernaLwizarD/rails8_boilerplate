@@ -8,7 +8,7 @@ class Web::Users::RegistrationsController < Devise::RegistrationsController
   # GET /resource/edit
   # Переопределяем edit, чтобы он возвращал 404
   def edit
-    render_not_found
+    head :not_found
   end
   # before_action :configure_account_update_params, only: [:update]
 
@@ -45,7 +45,7 @@ class Web::Users::RegistrationsController < Devise::RegistrationsController
   # PUT /resource
   # Переопределяем update, чтобы он возвращал 404
   def update
-    render_not_found
+    head :not_found
   end
 
   # DELETE /resource

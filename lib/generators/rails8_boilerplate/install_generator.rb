@@ -24,14 +24,26 @@ module Rails8Boilerplate
 
       def copy_initializers
         say "Копирование initializers...", :green
-        template 'lib/generators/rails8_boilerplate/templates/initializers/devise.rb',
+        template 'lib/generators/rails8_boilerplate/templates/config/initializers/devise.rb',
                  'config/initializers/devise.rb', force: options[:force]
-        template 'lib/generators/rails8_boilerplate/templates/initializers/pagy.rb',
+        template 'lib/generators/rails8_boilerplate/templates/config/initializers/pagy.rb',
                  'config/initializers/pagy.rb', force: options[:force]
+        template 'lib/generators/rails8_boilerplate/templates/config/initializers/content_security_policy.rb',
+                 'config/initializers/content_security_policy.rb', force: options[:force]
 
         say "\n⚠️ Настройте initializers под ваше приложение при необходимости:", :yellow
         say "  - config/initializers/devise.rb"
-        say "  - config/initializers/pagy.rb\n"
+        say "  - config/initializers/pagy.rb"
+        say "  - config/initializers/content_security_policy.rb\n"
+      end
+
+      def copy_config_files
+        say "Копирование config файлов...", :green
+        template 'lib/generators/rails8_boilerplate/templates/config/cable.yml',
+                 'config/cable.yml', force: options[:force]
+
+        say "\n⚠️ Настройте config файлы при необходимости:", :yellow
+        say "  - config/cable.yml (Solid Cable для production)\n"
       end
 
       def copy_models
@@ -342,7 +354,8 @@ module Rails8Boilerplate
         say "  • Views:        app/views/web/*"
         say "  • Layout:       удалён стандартный (используется из engine)"
         say "  • Specs:        spec/*"
-        say "  • Initializers: config/initializers/devise.rb, pagy.rb"
+        say "  • Initializers: config/initializers/devise.rb, pagy.rb, content_security_policy.rb"
+        say "  • Config:       config/cable.yml (Solid Cable)"
         say "  • Локализации:  config/locales/*"
         say "  • Seeds:        db/seeds.rb"
         say "  • Миграции:     db/migrate/devise_create_users.rb"

@@ -1,16 +1,15 @@
 module ButtonsHelper
   def lte_button_to(options)
-    classes = %i[btn btn-sm]
+    classes = %w[btn btn-sm]
     classes << (options[:bg_class].presence || 'btn-default')
 
     options[:text] ||= ''
     options[:path] ||= '#'
 
-    if options[:method].present?
-      link_to(options[:text], options[:path], method: options[:method], class: classes.join(' ')).html_safe
-    else
-      link_to(options[:text], options[:path], class: classes.join(' ')).html_safe
-    end
+    html_opts = { class: classes.join(' ') }
+    html_opts[:method] = options[:method] if options[:method].present?
+
+    link_to(options[:text], options[:path], html_opts)
   end
 
   def draw_edit_button(options)
@@ -43,28 +42,23 @@ module ButtonsHelper
 
   def draw_save_button(options = {})
     # для кнопки за пределами формы необходимы параметры type="button", onclick="submit()", form="form_name"
-    classes = %i[btn btn-sm border-0 btn-success]
+    classes = %w[btn btn-sm border-0 btn-success]
     classes << 'disabled' if options[:disabled].present?
 
-    options[:type] ||= 'submit'
-    options[:name] ||= 'button'
-    form = options[:form].present? ? %( form="#{options[:form]}") : ''
-    id = options[:id].present? ? %( id="#{options[:id]}") : ''
-    name = options[:name].present? ? %( name="#{options[:name]}") : ''
-    onclick = options[:onclick].present? ? %( onclick="#{options[:onclick]}" ) : ''
+    html_options = {
+      type: options[:type] || 'submit',
+      class: classes.join(' '),
+      name: options[:name] || 'button'
+    }
+    html_options[:form] = options[:form] if options[:form].present?
+    html_options[:id] = options[:id] if options[:id].present?
+    html_options[:onclick] = options[:onclick] if options[:onclick].present?
 
-    out = %(
-      <button
-        type="#{options[:type]}"
-        class="#{classes.join(' ')}"#{form}#{id}#{name}#{onclick}>
-        #{icon('fas', 'save', 'Сохранить')}
-      </button>
-    )
-    out.html_safe
+    content_tag(:button, icon('fas', 'save', 'Сохранить'), html_options)
   end
 
   def draw_new_button(options)
-    classes = %i[btn btn-sm]
+    classes = %w[btn btn-sm]
     classes << 'disabled' if options[:disabled].present?
 
     classes << (options[:bg_class].presence || 'btn-outline-primary')
@@ -73,16 +67,14 @@ module ButtonsHelper
     options[:label] ||= 'Добавить'
     options[:icon] ||= 'plus'
 
+    btn_content = icon('fas', options[:icon], options[:label])
+
     if options[:button].present?
-      %(
-      #{link_to(%(
-          <button type="button" class="#{class_prop}">
-            #{icon('fas', options[:icon], options[:label])}
-          </button>
-        ).html_safe, options[:path])}
-      ).html_safe
+      link_to(options[:path]) do
+        content_tag(:button, btn_content, type: 'button', class: class_prop)
+      end
     else
-      link_to(icon('fas', options[:icon], options[:label]), options[:path], class: class_prop)
+      link_to(btn_content, options[:path], class: class_prop)
     end
   end
 

@@ -3,7 +3,7 @@
   <div class="card">
     <div class="card-body register-card-body">
       <p class="register-box-msg">Регистрация</p>
-      <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+      <%= form_with(model: resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
         <%= render "web/users/shared/error_messages", resource: resource %>
 
         <div class="input-group mb-3">

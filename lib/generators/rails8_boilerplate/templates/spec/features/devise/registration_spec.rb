@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Регистрация', type: :system do
-  new_password = Faker::Internet.password(min_length: 6)
+  let(:new_password) { Faker::Internet.password(min_length: 6) }
 
   before do
     visit root_path

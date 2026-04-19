@@ -20,6 +20,7 @@ FactoryBot.define do
       locked_at { 1.hour.ago }
     end
 
+    # Пропуск Devise callbacks (confirmation email) при создании тестовых данных
     to_create { |instance| instance.save(validate: false) }
   end
 end

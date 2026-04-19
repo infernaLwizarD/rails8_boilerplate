@@ -3,7 +3,7 @@
   <div class="card">
     <div class="card-body login-card-body">
       <p class="login-box-msg">Отправить инструкции по подтверждению</p>
-      <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
+      <%= form_with(model: resource, as: resource_name, url: confirmation_path(resource_name), method: :post) do |f| %>
         <%= render "web/users/shared/error_messages", resource: resource %>
 
         <div class="input-group mb-3">
