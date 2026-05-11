@@ -22,11 +22,11 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'rails', '~> 8.1.2'
   spec.add_dependency 'stimulus-rails'
-  spec.add_dependency 'devise', '~> 4.9'
+  spec.add_dependency 'devise', '>= 4.9', '< 6.0'
   spec.add_dependency 'discard', '~> 1.4'
   spec.add_dependency 'csv'
   spec.add_dependency 'morph', '~> 0.3'
-  spec.add_dependency 'pagy', '~> 9.4'
+  spec.add_dependency 'pagy', '>= 9.4', '< 44.0'
   spec.add_dependency 'pundit', '~> 2.3'
   spec.add_dependency 'ransack', '~> 4.2'
   spec.add_dependency 'colorize', '~> 1.1'
